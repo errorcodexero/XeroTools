@@ -1,0 +1,8 @@
+/**/bin
+/**/obj
+/**/Debug
+/**/Release
+/**/Win32
+/**/x64
+.vs
+packages

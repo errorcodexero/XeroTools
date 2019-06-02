@@ -1,0 +1,44 @@
+﻿
+  Completed
+  ---------
+  - Change waypoint values in waypoint window, update display
+  - Editing feature: move waypoint
+  - Editing feature: rotate waypoing
+  - Editing feature: delete waypoint (delete key)
+  - Editing feature: insert waypoint (insert key)
+  - Editing feature: keyboard move waypoint (arrows)
+  - Editing feature: keyboard rotate waypoint (plus and minus key)
+  - Add path generation interface - quick
+  - Add path generator search (assemblies)
+  - Display feature: display actual path on screen
+  - Display feature: display robot size on waypoint select
+  - Undo stack
+  - Path context menus: really make it context specific
+  - Editing feature: delete path
+  - Add copyrights to the about screen
+  - Logging window and support
+  - Units
+  - Copy path
+  - Move path between path groups
+  - Combo boxes for units and drive type
+  - Swerve rotational model
+  - Demo mode for all path groups
+  - Menu item for demo path/group
+  - Menu item for demo all paths
+  - Help Menu
+    -  About Dialog Box
+  -  Help (bring up PDF)
+  - Preferences Dialog Box
+  - Plot window demo mode stops moving time vertical line after manually being moved
+  - Window entered angles do not get bound to -180 to 180
+  - If you update robot max velocity, accel, jerk, update paths and waypoints that match
+
+
+  BUGS
+  ----
+
+  TODO
+  ----
+  - Test swerve on a real drive base (hopefully this summer)
+  - Testing, Testing, Testing
+  - Documentation
