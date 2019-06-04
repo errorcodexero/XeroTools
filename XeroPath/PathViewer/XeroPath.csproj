@@ -63,6 +63,7 @@
     <Compile Include="NoSegmentsException.cs" />
     <Compile Include="PathFileDiff.cs" />
     <Compile Include="PathUtils.cs" />
+    <Compile Include="RecentFiles.cs" />
     <Compile Include="RobotFieldView.cs">
       <SubType>UserControl</SubType>
     </Compile>

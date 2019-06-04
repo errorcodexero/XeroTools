@@ -65,8 +65,8 @@ namespace CheesyPoofsGenerator
             if (pathfile == string.Empty)
                 return null;
 
-            args += " --dx " + UnitConverter.Convert(2.0, "inches", robot.Units);
-            args += " --dy " + UnitConverter.Convert(0.05, "inches", robot.Units);
+            args += " --dx " + UnitConverter.Convert(2.0, "inches", robot.LengthUnits);
+            args += " --dy " + UnitConverter.Convert(0.05, "inches", robot.LengthUnits);
             args += " --dtheta 0.1";
             args += " --outfile " + outfile;
             args += " --pathfile " + pathfile;

@@ -22,11 +22,15 @@ namespace PathViewer
             foreach (string units in UnitConverter.SupportedUnits)
             {
                 m_units.Items.Add(units);
-                if (defs.DefaultUnits == units)
+                if (defs.DefaultLengthUnits == units)
                     m_units.SelectedItem = units;
             }
 
             m_undostack.Value = defs.UndoStackSize;
+            if (defs.DefaultAngleUnits == "Degrees")
+                m_angle_units.SelectedIndex = 0;
+            else
+                m_angle_units.SelectedIndex = 1;
 
             m_ok.Click += M_ok_Click;
         }
@@ -34,7 +38,8 @@ namespace PathViewer
         private void M_ok_Click(object sender, EventArgs e)
         {
             Defaults.UndoStackSize = Decimal.ToInt32(m_undostack.Value);
-            Defaults.DefaultUnits = (string)m_units.SelectedItem;
+            Defaults.DefaultLengthUnits = (string)m_units.SelectedItem;
+            Defaults.DefaultAngleUnits = (string)m_angle_units.SelectedItem;
         }
     }
 }

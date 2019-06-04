@@ -9,8 +9,11 @@ namespace PathViewer
 {
     public class XeroPathAppDefaults
     {
-        [JsonProperty(PropertyName = "units")]
-        public string DefaultUnits;
+        [JsonProperty(PropertyName = "length_units")]
+        public string DefaultLengthUnits;
+
+        [JsonProperty(PropertyName = "angle_units")]
+        public string DefaultAngleUnits;
 
         [JsonProperty(PropertyName = "undo_stack_size")]
         public int UndoStackSize;

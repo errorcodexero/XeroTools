@@ -115,7 +115,7 @@ namespace PathViewer
             Array.Resize<RobotPath>(ref Paths, Paths.Length + 1);
             Paths[Paths.Length - 1] = path;
 
-            double length = UnitConverter.Convert(100.0, "inches", robot.Units);
+            double length = UnitConverter.Convert(100.0, "inches", robot.LengthUnits);
 
             path.AddPoint(new WayPoint(0.0, 0.0, 0.0, 0.0));
             path.AddPoint(new WayPoint(length, 0.0, 0.0, 0.0));

@@ -32,14 +32,18 @@
   - Plot window demo mode stops moving time vertical line after manually being moved
   - Window entered angles do not get bound to -180 to 180
   - If you update robot max velocity, accel, jerk, update paths and waypoints that match
-
+  - Option to output degrees or radians for heading
+  - Recently loaded files
 
   BUGS
   ----
 
   TODO
   ----
-  - Option to output degrees or radians for heading
-  - Test swerve on a real drive base (hopefully this summer)
-  - Testing, Testing, Testing
+  - Keybindings
+  - Test Cheesy Path algorithms on a real tank drive base
+  - Test PathFinder V1 algorithms on a real tank drive base
+  - Test Cheesy Path algorithms on a real swerve drive base
+  - Test PathFinder V1 algorithsm on a real swerve drive base
+  - Testing of the GUI in general
   - Documentation

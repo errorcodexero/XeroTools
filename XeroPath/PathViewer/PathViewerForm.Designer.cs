@@ -72,6 +72,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.generatePathsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generatePathsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentlFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.m_edit_menu = new System.Windows.Forms.ToolStripMenuItem();
             this.insertWaypointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -471,7 +473,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.m_misc_status.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.m_misc_status.Name = "m_misc_status";
-            this.m_misc_status.Size = new System.Drawing.Size(1302, 29);
+            this.m_misc_status.Size = new System.Drawing.Size(1348, 29);
             this.m_misc_status.Spring = true;
             this.m_misc_status.Text = "Selected Group: None, Selected Path: None";
             // 
@@ -504,7 +506,9 @@
             this.toolStripMenuItem1,
             this.toolStripSeparator3,
             this.generatePathsToolStripMenuItem,
-            this.generatePathsToolStripMenuItem1});
+            this.generatePathsToolStripMenuItem1,
+            this.toolStripSeparator6,
+            this.recentlFilesToolStripMenuItem});
             this.m_file_menu.Name = "m_file_menu";
             this.m_file_menu.Size = new System.Drawing.Size(50, 29);
             this.m_file_menu.Text = "File";
@@ -572,6 +576,17 @@
             this.generatePathsToolStripMenuItem1.Size = new System.Drawing.Size(260, 30);
             this.generatePathsToolStripMenuItem1.Text = "Generate Paths";
             this.generatePathsToolStripMenuItem1.Click += new System.EventHandler(this.GeneratePathMenuItem);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(257, 6);
+            // 
+            // recentlFilesToolStripMenuItem
+            // 
+            this.recentlFilesToolStripMenuItem.Name = "recentlFilesToolStripMenuItem";
+            this.recentlFilesToolStripMenuItem.Size = new System.Drawing.Size(260, 30);
+            this.recentlFilesToolStripMenuItem.Text = "Recent Files";
             // 
             // m_edit_menu
             // 
@@ -837,6 +852,8 @@
         private System.Windows.Forms.ToolStripMenuItem groupToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel m_undo_stack_usage;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem recentlFilesToolStripMenuItem;
     }
 }
 

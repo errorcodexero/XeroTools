@@ -25,6 +25,7 @@ namespace PathViewer
         private const string RotationEndDelayLabel = "Rotation End Delay";
         private const string TypeLabel = "Type";
         private const string UnitsLabel = "Units";
+        private const string AngleUnitsLabel = "Angles";
         private const string WidthLabel = "Width";
         private const string LengthLabel = "Length";
         private const string TimestampLabel = "Timestep";
@@ -147,6 +148,11 @@ namespace PathViewer
         /// </summary>
         private System.Windows.Forms.Timer m_timer;
 
+        /// <summary>
+        /// The set of recent files
+        /// </summary>
+        private RecentFiles m_recent;
+
         #endregion
 
         #region private delegates
@@ -175,6 +181,7 @@ namespace PathViewer
             m_generators = new GeneratorManager();
 
             m_defaults = ReadDefaults();
+            m_recent = ReadRecent();
 
             if (m_games.Count == 0)
             {
@@ -191,7 +198,8 @@ namespace PathViewer
             }
 
             m_file = new PathFile();
-            m_file.ConvertUnits(m_defaults.DefaultUnits);
+            m_file.ConvertUnits(m_defaults.DefaultLengthUnits);
+            m_file.Robot.AngleUnits = m_defaults.DefaultAngleUnits;
             Text = "Path Editor - Unsaved";
 
             m_editing_pathtree = null;
@@ -235,6 +243,7 @@ namespace PathViewer
             PopulateGeneratorMenu();
             SetUnits();
             UpdateRobotWindow();
+            UpdateRecentMenu();
 
             m_detailed.Robot = m_file.Robot;
             m_detailed.FieldMouseMoved += FieldMouseMoved;
@@ -284,10 +293,10 @@ namespace PathViewer
                 }
             }
 
-            if (defaults == null || defaults.DefaultUnits == null)
+            if (defaults == null || defaults.DefaultLengthUnits == null)
             {
                 defaults = new XeroPathAppDefaults();
-                defaults.DefaultUnits = "inches";
+                defaults.DefaultLengthUnits = "inches";
                 defaults.UndoStackSize = 20;
             }
 
@@ -498,9 +507,9 @@ namespace PathViewer
 
         void SetUnits()
         {
-            m_plot.Units = m_file.Robot.Units;
-            m_current_game.Units = m_file.Robot.Units;
-            m_field.Units = m_file.Robot.Units;
+            m_plot.Units = m_file.Robot.LengthUnits;
+            m_current_game.Units = m_file.Robot.LengthUnits;
+            m_field.Units = m_file.Robot.LengthUnits;
         }
 
         private void M_flow_Layout(object sender, LayoutEventArgs e)
@@ -629,9 +638,9 @@ namespace PathViewer
                 else
                 {
                     if (e.Shift)
-                        m_field.SelectedWaypoint.Y += UnitConverter.Convert(0.1, "inches", m_file.Robot.Units);
+                        m_field.SelectedWaypoint.Y += UnitConverter.Convert(0.1, "inches", m_file.Robot.LengthUnits);
                     else
-                        m_field.SelectedWaypoint.Y += UnitConverter.Convert(1.0, "inches", m_file.Robot.Units);
+                        m_field.SelectedWaypoint.Y += UnitConverter.Convert(1.0, "inches", m_file.Robot.LengthUnits);
 
                     m_file.IsDirty = true;
                     gen = true;
@@ -644,9 +653,9 @@ namespace PathViewer
                 else
                 {
                     if (e.Shift)
-                        m_field.SelectedWaypoint.Y -= UnitConverter.Convert(0.1, "inches", m_file.Robot.Units);
+                        m_field.SelectedWaypoint.Y -= UnitConverter.Convert(0.1, "inches", m_file.Robot.LengthUnits);
                     else
-                        m_field.SelectedWaypoint.Y -= UnitConverter.Convert(1.0, "inches", m_file.Robot.Units);
+                        m_field.SelectedWaypoint.Y -= UnitConverter.Convert(1.0, "inches", m_file.Robot.LengthUnits);
 
                     m_file.IsDirty = true;
                     gen = true;
@@ -659,9 +668,9 @@ namespace PathViewer
                 else
                 {
                     if (e.Shift)
-                        m_field.SelectedWaypoint.X -= UnitConverter.Convert(0.1, "inches", m_file.Robot.Units);
+                        m_field.SelectedWaypoint.X -= UnitConverter.Convert(0.1, "inches", m_file.Robot.LengthUnits);
                     else
-                        m_field.SelectedWaypoint.X -= UnitConverter.Convert(1.0, "inches", m_file.Robot.Units);
+                        m_field.SelectedWaypoint.X -= UnitConverter.Convert(1.0, "inches", m_file.Robot.LengthUnits);
 
                     m_file.IsDirty = true;
                     gen = true;
@@ -674,9 +683,9 @@ namespace PathViewer
                 else
                 {
                     if (e.Shift)
-                        m_field.SelectedWaypoint.X += UnitConverter.Convert(0.1, "inches", m_file.Robot.Units);
+                        m_field.SelectedWaypoint.X += UnitConverter.Convert(0.1, "inches", m_file.Robot.LengthUnits);
                     else
-                        m_field.SelectedWaypoint.X += UnitConverter.Convert(1.0, "inches", m_file.Robot.Units);
+                        m_field.SelectedWaypoint.X += UnitConverter.Convert(1.0, "inches", m_file.Robot.LengthUnits);
 
                     m_file.IsDirty = true;
                     gen = true;
@@ -966,6 +975,25 @@ namespace PathViewer
                 m_combo_editor.SelectedIndexChanged += SelectedComboItemChanged;
                 m_combo_editor.Focus();
             }
+            else if (item.Text == AngleUnitsLabel)
+            {
+                List<string> supported = new List<string>() { "degrees", "radians" };
+
+                Rectangle b = new Rectangle(item.SubItems[1].Bounds.Left, item.SubItems[1].Bounds.Top, item.SubItems[1].Bounds.Width, item.SubItems[1].Bounds.Height);
+                m_ignore_lost_focus = false;
+                m_combo_editor = new ComboBox();
+                foreach (string sitem in supported)
+                    m_combo_editor.Items.Add(sitem);
+                SetComboInitialValue(m_file.Robot.AngleUnits);
+                m_combo_editor.DropDownStyle = ComboBoxStyle.DropDownList;
+                m_combo_editor.Enabled = true;
+                m_combo_editor.Visible = true;
+                m_combo_editor.Bounds = b;
+                m_combo_editor.Parent = m_robot_view;
+                m_combo_editor.LostFocus += FinishedEditingProperty;
+                m_combo_editor.SelectedIndexChanged += SelectedComboItemChanged;
+                m_combo_editor.Focus();
+            }
             else if (item.Text == UnitsLabel)
             {
                 List<string> supported = UnitConverter.SupportedUnits;
@@ -975,7 +1003,7 @@ namespace PathViewer
                 m_combo_editor = new ComboBox();
                 foreach (string sitem in supported)
                     m_combo_editor.Items.Add(sitem);
-                SetComboInitialValue(m_file.Robot.Units);
+                SetComboInitialValue(m_file.Robot.LengthUnits);
                 m_combo_editor.DropDownStyle = ComboBoxStyle.DropDownList;
                 m_combo_editor.Enabled = true;
                 m_combo_editor.Visible = true;
@@ -1547,6 +1575,9 @@ namespace PathViewer
                 try
                 {
                     m_file = JsonConvert.DeserializeObject<PathFile>(json);
+                    if (string.IsNullOrEmpty(m_file.Robot.AngleUnits))
+                        m_file.Robot.AngleUnits = "Degrees" ;
+
                     SetUnits();
                 }
                 catch(Newtonsoft.Json.JsonSerializationException ex)
@@ -1562,6 +1593,7 @@ namespace PathViewer
                 GenerateAllSplines();
                 UpdatePathTree();
                 UpdateRobotWindow();
+                UpdateRecentFileList(dialog.FileName);
             }
         }
 
@@ -1869,11 +1901,22 @@ namespace PathViewer
             {
                 string myunits = m_combo_editor.SelectedItem as string;
 
-                if (myunits != m_file.Robot.Units)
+                if (myunits != m_file.Robot.LengthUnits)
                 {
                     PushUndoStack();
                     SetUnits();
                     m_file.ConvertUnits(myunits);
+                }
+            }
+            else if (m_robot_param_editing.Text == AngleUnitsLabel)
+            {
+                string myunits = m_combo_editor.SelectedItem as string;
+
+                if (myunits != m_file.Robot.AngleUnits)
+                {
+                    PushUndoStack();
+                    m_file.Robot.AngleUnits = myunits;
+                    m_file.IsDirty = true;
                 }
             }
             else
@@ -2242,7 +2285,11 @@ namespace PathViewer
                 m_robot_view.Items.Clear();
 
                 item = new ListViewItem(UnitsLabel);
-                item.SubItems.Add(m_file.Robot.Units);
+                item.SubItems.Add(m_file.Robot.LengthUnits);
+                m_robot_view.Items.Add(item);
+
+                item = new ListViewItem(AngleUnitsLabel);
+                item.SubItems.Add(m_file.Robot.AngleUnits);
                 m_robot_view.Items.Add(item);
 
                 item = new ListViewItem(TypeLabel);
@@ -2298,7 +2345,7 @@ namespace PathViewer
             m_field.FieldGame = g;
             m_detailed.FieldGame = g;
             m_current_game = g;
-            m_current_game.Units = m_file.Robot.Units;
+            m_current_game.Units = m_file.Robot.LengthUnits;
         }
 
         private void InitializeGenerator(PathGenerator g)
@@ -2314,6 +2361,148 @@ namespace PathViewer
             m_generator.Start();
             GenerateAllSplines();
         }
+        #endregion
+
+        #region recently opened files
+
+        private RecentFiles ReadRecent()
+        {
+            RecentFiles files = null;
+
+            string appdata = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "XeroPath", "recent.json");
+            if (File.Exists(appdata))
+            {
+                string json = File.ReadAllText(appdata);
+                try
+                {
+                    files = JsonConvert.DeserializeObject<RecentFiles>(json);
+                }
+                catch (Newtonsoft.Json.JsonSerializationException)
+                {
+                    files = null;
+                }
+            }
+
+            if (files == null)
+                files = new RecentFiles();
+
+            return files;
+        }
+
+        private void UpdateRecentFileList(string add)
+        {
+            m_recent.RecentFileList.Add(add);
+            while (m_recent.RecentFileList.Count > 4)
+                m_recent.RecentFileList.RemoveAt(0);
+
+            string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (!Directory.Exists(appdata))
+            {
+                MessageBox.Show("Cannot save preferences, appdata directory '" + appdata + "' does not exist", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            appdata = Path.Combine(appdata, "XeroPath");
+            if (!Directory.Exists(appdata))
+            {
+                DirectoryInfo info;
+
+                try
+                {
+                    info = Directory.CreateDirectory(appdata);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Cannot save preferences, cannot create directory '" + appdata + "' - " + ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            appdata = Path.Combine(appdata, "recent.json");
+            string json = JsonConvert.SerializeObject(m_recent);
+            try
+            {
+                File.WriteAllText(appdata, json);
+            }
+            catch (Exception ex)
+            {
+                m_logger.LogMessage(Logger.MessageType.Warning, "cannot save recently opened files list '" + appdata + "' - " + ex.Message);
+            }
+
+            UpdateRecentMenu();
+        }
+
+        private void UpdateRecentMenu()
+        {
+            ToolStripMenuItem recentmenu = m_file_menu.DropDownItems[11] as ToolStripMenuItem;
+            if (recentmenu != null)
+            {
+                recentmenu.DropDownItems.Clear();
+
+                if (m_recent.RecentFileList.Count == 0)
+                {
+                    recentmenu.Enabled = false;
+                }
+                else
+                {
+                    for (int i = m_recent.RecentFileList.Count - 1; i >= 0; i--)
+                    {
+                        ToolStripMenuItem item = new ToolStripMenuItem(m_recent.RecentFileList[i]);
+                        item.Click += RecentFileSelected;
+                        recentmenu.DropDownItems.Add(item);
+                    }
+                }
+            }
+        }
+
+        private void RecentFileSelected(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            if (item != null)
+            {
+                if (m_file != null && m_file.IsDirty)
+                {
+                    DialogResult result = MessageBox.Show(
+                        "The current path file has unsaved changes.  Do you want to save this file first?",
+                        "Unsaved Changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        if (!SaveChanges())
+                        {
+                            MessageBox.Show("Could not save changes, open operation aborted", "Open Aborted",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                    }
+                    else if (result == DialogResult.Cancel)
+                        return;
+                }
+
+                string json = File.ReadAllText(item.Text);
+                try
+                {
+                    m_file = JsonConvert.DeserializeObject<PathFile>(json);
+                    if (string.IsNullOrEmpty(m_file.Robot.AngleUnits))
+                        m_file.Robot.AngleUnits = "Degrees" ;
+                    SetUnits();
+                }
+                catch (Newtonsoft.Json.JsonSerializationException ex)
+                {
+                    string msg = "Cannot load path file '" + item.Text + "' - invalid file contents - " + ex.Message;
+                    MessageBox.Show(msg, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                m_file.PathName = item.Text;
+                m_field.File = m_file;
+                m_detailed.Robot = m_file.Robot;
+                Text = "Path Editor - " + m_file.PathName;
+                m_undo_stack = new List<UndoState>();
+                GenerateAllSplines();
+                UpdatePathTree();
+                UpdateRobotWindow();
+            }
+        }
+
+
         #endregion
 
         private void UpdateCurrentPath()
@@ -2580,7 +2769,17 @@ namespace PathViewer
                                 if (!first)
                                     writer.Write(',');
 
-                                writer.Write(segs[j].GetValue(fields[i]));
+                                if (fields[i] == "heading" && m_file.Robot.AngleUnits == "radians")
+                                {
+                                    //
+                                    // Handle heading special
+                                    //
+                                    writer.Write(XeroMath.XeroUtils.DegreesToRadians(segs[j].GetValue("heading")));
+                                }
+                                else
+                                {
+                                    writer.Write(segs[j].GetValue(fields[i]));
+                                }
                                 first = false;
                             }
                         }

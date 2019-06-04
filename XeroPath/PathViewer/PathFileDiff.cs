@@ -29,8 +29,8 @@ namespace PathViewer
             if (p1.DriveType != p2.DriveType)
                 diff.Add("DriveType:p1 = " + p1.DriveType + ", p2 = " + p2.DriveType);
 
-            if (p1.Units != p2.Units)
-                diff.Add("Units: p1 = " + p1.Units + ", p2 = " + p2.Units);
+            if (p1.LengthUnits != p2.LengthUnits)
+                diff.Add("Units: p1 = " + p1.LengthUnits + ", p2 = " + p2.LengthUnits);
 
             if (Math.Abs(p1.Length - p2.Length) > kEpsilon)
                 diff.Add("Length: p1 = " + p1.Length.ToString() + ", p2 = " + p2.Length.ToString());
