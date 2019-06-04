@@ -7,7 +7,7 @@ namespace xero {
 		class ICsv
 		{
 		public:
-			virtual std::string toCSV() const = 0;
+			virtual double getField(const std::string &field) const = 0;
 		};
 	}
 }

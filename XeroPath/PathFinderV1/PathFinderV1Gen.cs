@@ -97,8 +97,7 @@ namespace PathFinderV1
             proc.CancelErrorRead();
             proc.CancelOutputRead();
 
-            string[] headers = { "time", "x", "y", "heading", "curvature", "dscurvature", "position", "velocity", "acceleration" };
-
+            string[] headers = { "time", "x", "y", "position", "velocity", "acceleration", "jerk", "heading" };
             PathSegment[] seg = ParseOutputFile(outfile, headers);
             File.Delete(outfile);
             File.Delete(pathfile);

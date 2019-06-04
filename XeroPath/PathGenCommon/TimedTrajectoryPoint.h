@@ -7,7 +7,7 @@ namespace xero {
 		class TimedTrajectoryPoint : public TrajectorySamplePoint
 		{
 		public:
-			TimedTrajectoryPoint(const TrajectorySamplePoint& pt, double t, double p, double v, double a);
+			TimedTrajectoryPoint(const TrajectorySamplePoint& pt, double t, double p, double v, double a, double j);
 			virtual ~TimedTrajectoryPoint();
 
 			double getTime() const {
@@ -42,15 +42,43 @@ namespace xero {
 				position_ = v;
 			}
 
-			virtual std::string toCSV() const {
-				std::string ret;
-				ret += std::to_string(time_);
-				ret += "," + Pose2dWithCurvature::toCSV();
-				ret += "," + std::to_string(position_);
-				ret += "," + std::to_string(velocity_);
-				ret += "," + std::to_string(acceleration_);
+			double getJerk() const {
+				return jerk_;
+			}
 
-				return ret;
+			void setJerk(double v) {
+				jerk_ = v;
+			}
+
+			virtual double getField(const std::string &field) const {
+				double v;
+
+				if (field == "time")
+				{
+					v = time_;
+				}
+				else if (field == "position")
+				{
+					v = position_;
+				}
+				else if (field == "velocity")
+				{
+					v = velocity_;
+				}
+				else if (field == "acceleration")
+				{
+					v = acceleration_;
+				}
+				else if (field == "jerk")
+				{
+					v = jerk_;
+				}
+				else
+				{
+					v = TrajectorySamplePoint::getField(field);
+				}
+
+				return v;
 			}
 
 			TimedTrajectoryPoint interpolateByTime(const TimedTrajectoryPoint& other, double time) const;
@@ -60,6 +88,7 @@ namespace xero {
 			double position_;
 			double velocity_;
 			double acceleration_;
+			double jerk_;
 		};
 	}
 }

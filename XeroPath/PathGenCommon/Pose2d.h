@@ -42,13 +42,7 @@ namespace xero
 			double distance(const Pose2d &other) const;
 			Pose2d mirror() const;
 
-			std::string toCSV() const {
-				std::string ret;
-				ret += std::to_string(pos_.getX());
-				ret += "," + std::to_string(pos_.getY());
-				ret += "," + std::to_string(rotation_.toDegrees());
-				return ret;
-			}
+			virtual double getField(const std::string& field) const;
 
 		private:
 			static Translation2d intersection(const Pose2d& a, const Pose2d& b);

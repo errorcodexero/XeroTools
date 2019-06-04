@@ -2,6 +2,7 @@
 #include "Twist2d.h"
 #include <limits>
 #include <cmath>
+#include <stdexcept>
 
 namespace xero
 {
@@ -169,6 +170,31 @@ namespace xero
 
 			Twist2d twist = logfn(inverse().transformBy(other));
 			return (MathUtils::epsilonEqual(twist.getY(), 0.0) && MathUtils::epsilonEqual(twist.getTheta(), 0.0));
+		}
+
+		double Pose2d::getField(const std::string& field) const
+		{
+			double v;
+
+			if (field == "x")
+			{
+				v = pos_.getX();
+			}
+			else if (field == "y")
+			{
+				v = pos_.getY();
+			}
+			else if (field == "heading")
+			{
+				v = rotation_.toDegrees();
+			}
+			else 
+			{
+				std::string msg = "field '" + field + "' is not a defined field";
+				throw std::runtime_error(msg.c_str());
+			}
+
+			return v;
 		}
 	}
 }

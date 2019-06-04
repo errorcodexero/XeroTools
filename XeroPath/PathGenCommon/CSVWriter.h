@@ -36,7 +36,15 @@ namespace xero
 				for (auto it = first; it != last; it++)
 				{
 					const ICsv &cl = *it;
-					strm << cl.toCSV() << std::endl;
+					for (size_t i = 0; i < headers.size(); i++)
+					{
+						double v = cl.getField(headers[i]);
+						if (i != 0)
+							strm << "," ;
+
+						strm << v;
+					}
+					strm << std::endl;
 				}
 
 				return true;

@@ -48,13 +48,8 @@ namespace xero
 			Pose2dWithCurvature interpolate(const Pose2dWithCurvature& other, double percent) const;
 			double distance(const Pose2dWithCurvature& other) const ;
 
-			std::string toCSV() const {
-				std::string ret;
-				ret += pose_.toCSV();
-				ret += "," + std::to_string(curvature_);
-				ret += "," + std::to_string(dcurvature_ds_);
-				return ret;
-			}
+			virtual double getField(const std::string& field) const;
+
 
 		private:
 			Pose2d pose_;

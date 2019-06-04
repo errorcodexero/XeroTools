@@ -21,6 +21,10 @@ namespace xero {
 				return index_ceil_;
 			}
 
+			virtual double getField(const std::string& field) const {
+				return Pose2dWithCurvature::getField(field);
+			}
+
 		private:
 			size_t index_floor_;
 			size_t index_ceil_;

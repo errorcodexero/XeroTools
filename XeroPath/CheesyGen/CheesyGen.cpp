@@ -307,6 +307,6 @@ void generateForPath(PathGroup& group, const std::string& path)
 
 	TimedTrajectory timed_ttj = TimingUtil::createConstantTimeTrajectory(ttj, timestep);
 
-	std::vector<std::string> headers = { "time", "x", "y", "heading", "curvature", "dscurvature", "position", "velocity", "acceleration" };
+	std::vector<std::string> headers = { "time", "x", "y", "position", "velocity", "acceleration", "jerk", "heading" };
 	CSVWriter::write< std::vector<TimedTrajectoryPoint>::const_iterator>(name, headers, timed_ttj.getPoints().begin(), timed_ttj.getPoints().end());
 }

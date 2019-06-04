@@ -47,7 +47,7 @@ namespace xero
 				Pose2d p2d(trajectory[i].x, trajectory[i].y, Rotation2d::fromRadians(trajectory[i].heading));
 				Pose2dWithCurvature p2dwc(p2d, 0.0, 0.0);
 				TrajectorySamplePoint sp(p2dwc, 0, 0);
-				TimedTrajectoryPoint pt(sp, time, trajectory[i].position, trajectory[i].velocity, trajectory[i].acceleration);
+				TimedTrajectoryPoint pt(sp, time, trajectory[i].position, trajectory[i].velocity, trajectory[i].acceleration, trajectory[i].jerk);
 				ptarr.push_back(pt);
 				time += trajectory[i].dt;
 			}

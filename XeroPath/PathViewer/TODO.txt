@@ -39,6 +39,7 @@
 
   TODO
   ----
+  - Option to output degrees or radians for heading
   - Test swerve on a real drive base (hopefully this summer)
   - Testing, Testing, Testing
   - Documentation

@@ -486,11 +486,6 @@ namespace PathViewer
 
         void SetGroup(PathGroup gr)
         {
-            if (gr == null)
-                Debug.WriteLine("SetGroup null");
-            else
-                Debug.WriteLine("SetGroup " + gr.Name);
-
             if (m_selected_group != gr)
             {
                 m_selected_group = gr;
@@ -2537,7 +2532,7 @@ namespace PathViewer
             }
         }
 
-        static string[] fields = { "time", "x", "y", "heading", "position", "velocity", "acceleration", "jerk" };
+        static string[] fields = { "time", "x", "y", "position", "velocity", "acceleration", "jerk", "heading" };
         private void WritePath(string grname, string pathname, string suffix, PathSegment[] segs)
         {
             string filename;
@@ -2554,41 +2549,50 @@ namespace PathViewer
             else
                 filename = Path.Combine(basedir, grname + "_" + pathname + "." + suffix + ".csv");
 
-            using (StreamWriter writer = new StreamWriter(filename))
+            try
             {
-                for (int i = 0; i < fields.Length; i++)
+                using (StreamWriter writer = new StreamWriter(filename))
                 {
-                    if (seg.HasValue(fields[i]))
-                    {
-                        if (!first)
-                            writer.Write(',');
-
-                        writer.Write('"');
-                        writer.Write(fields[i]);
-                        writer.Write("'");
-
-                        first = false;
-                    }
-                }
-                writer.WriteLine();
-
-                for (int j = 0; j < segs.Length; j++)
-                {
-                    first = true;
-
                     for (int i = 0; i < fields.Length; i++)
                     {
-                        if (segs[j].HasValue(fields[i]))
+                        if (seg.HasValue(fields[i]))
                         {
                             if (!first)
                                 writer.Write(',');
 
-                            writer.Write(segs[j].GetValue(fields[i]));
+                            writer.Write('"');
+                            writer.Write(fields[i]);
+                            writer.Write('"');
+
                             first = false;
                         }
                     }
                     writer.WriteLine();
+
+                    for (int j = 0; j < segs.Length; j++)
+                    {
+                        first = true;
+
+                        for (int i = 0; i < fields.Length; i++)
+                        {
+                            if (segs[j].HasValue(fields[i]))
+                            {
+                                if (!first)
+                                    writer.Write(',');
+
+                                writer.Write(segs[j].GetValue(fields[i]));
+                                first = false;
+                            }
+                        }
+                        writer.WriteLine();
+                    }
                 }
+            }
+            catch(IOException ex)
+            {
+                string msg = "Cannot open output file '" + filename + "' for writing - " + ex.Message;
+                MessageBox.Show(msg, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                m_logger.LogMessage(Logger.MessageType.Error, "Cannot open output path file '" + filename + "' - " + ex.Message);
             }
         }
 

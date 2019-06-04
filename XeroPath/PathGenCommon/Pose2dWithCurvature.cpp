@@ -55,5 +55,24 @@ namespace xero
 		{
 			return pose_.distance(other.getPose());
 		}
+
+		double Pose2dWithCurvature::getField(const std::string& field) const
+		{
+			double v;
+
+			if (field == "curvature")
+			{
+				v = curvature_;
+			}
+			else if (field == "dsdcurvature")
+			{
+				v = dcurvature_ds_;
+			}
+			else
+			{
+				v = pose_.getField(field);
+			}
+			return v;
+		}
 	}
 }

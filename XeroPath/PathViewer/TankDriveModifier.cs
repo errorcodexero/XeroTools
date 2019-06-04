@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using XeroMath;
 
 namespace PathViewer
@@ -27,14 +28,18 @@ namespace PathViewer
 
             for (int i = 0; i < segs.Length; i++)
             {
-                double heading = XeroUtils.DegreesToRadians(segs[i].GetValue("heading") / 180.0 * Math.PI);
+                double time = segs[i].GetValue("time");
+                double heading = XeroUtils.DegreesToRadians(segs[i].GetValue("heading"));
                 double ca = Math.Cos(heading);
                 double sa = Math.Sin(heading);
 
-                double lx = segs[i].GetValue("x") - robot.Width * sa / 2.0;
-                double ly = segs[i].GetValue("y") + robot.Width * ca / 2.0;
-                double rx = segs[i].GetValue("x") + robot.Width * sa / 2.0;
-                double ry = segs[i].GetValue("y") - robot.Width * ca / 2.0;
+                double px = segs[i].GetValue("x");
+                double py = segs[i].GetValue("y");
+
+                double lx = px - robot.Width * sa / 2.0;
+                double ly = py + robot.Width * ca / 2.0;
+                double rx = px + robot.Width * sa / 2.0;
+                double ry = py - robot.Width * ca / 2.0;
 
                 if (i == 0)
                 {
@@ -50,7 +55,7 @@ namespace PathViewer
                 }
                 else
                 {
-                    double dt = segs[i].GetValue("time") - segs[i - i].GetValue("time");
+                    double dt = segs[i].GetValue("time") - segs[i - 1].GetValue("time");
                     double ldist = Math.Sqrt((lx - plx) * (lx - plx) + (ly - ply) * (ly - ply));
                     double rdist = Math.Sqrt((rx - prx) * (rx - prx) + (ry - pry) * (ry - pry));
 
@@ -68,7 +73,7 @@ namespace PathViewer
                 }
 
                 PathSegment left = new PathSegment();
-                left.SetValue("time", segs[i].GetValue("time"));
+                left.SetValue("time", time);
                 left.SetValue("x", lx);
                 left.SetValue("y", ly);
                 left.SetValue("heading", segs[i].GetValue("heading"));

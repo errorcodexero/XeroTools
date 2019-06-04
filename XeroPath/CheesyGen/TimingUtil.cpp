@@ -211,6 +211,8 @@ namespace xero {
 			double t = 0.0;
 			double s = 0.0;
 			double v = 0.0;
+			double aprev = 0.0;
+			double j = 0.0;
 			for (size_t i = 0; i < states.size(); i++)
 			{
 				const ConstrainedPoint& cs = constrained_states[i];
@@ -232,9 +234,12 @@ namespace xero {
 				t += dt;
 				v = cs.getMaxVelocity();
 				s = cs.getDistance();
+				j = (accel - aprev) / dt;
 
-				TimedTrajectoryPoint tpt(*cs.getState(), t, s, v, accel);
+				TimedTrajectoryPoint tpt(*cs.getState(), t, s, v, accel, 0.0);
 				timed.push_back(tpt);
+
+				aprev = accel;
 			}
 
 			return TimedTrajectory(timed);
