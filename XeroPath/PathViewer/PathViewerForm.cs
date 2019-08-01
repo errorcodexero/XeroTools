@@ -2160,6 +2160,9 @@ namespace PathViewer
 
         private void HighlightTime(RobotPath path, WayPoint pt)
         {
+            if (pt == null)
+                return;
+
             if (!path.HasSegments)
             {
                 m_plot.Time = 0.0;
